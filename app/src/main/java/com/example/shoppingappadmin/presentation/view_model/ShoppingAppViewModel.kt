@@ -20,6 +20,9 @@ class ShoppingAppViewModel @Inject constructor(private val repo: ShoppingAppRepo
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
+    private val _fetchCategoryState = MutableStateFlow(FetchCategoryState())
+    val fetchCategoryState = _fetchCategoryState.asStateFlow()
+
     val category = mutableStateOf(CategoryModel())
 
     fun addCategory() {
@@ -40,6 +43,24 @@ class ShoppingAppViewModel @Inject constructor(private val repo: ShoppingAppRepo
         }
     }
 
+    fun fetchCategory(){
+        viewModelScope.launch {
+            repo.fetchCategory().collectLatest {
+                when(it){
+                    is ResultState.Success -> {
+                        _fetchCategoryState.value = FetchCategoryState(success = it.data)
+                    }
+                    is ResultState.Error -> {
+                        _fetchCategoryState.value = FetchCategoryState(error = it.message)
+                    }
+                    is ResultState.Loading -> {
+                        _fetchCategoryState.value = FetchCategoryState(isLoading = true)
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -47,4 +68,10 @@ data class State(
     val isLoading: Boolean = false,
     val error : String = "",
     val success: String = ""
+)
+
+data class FetchCategoryState(
+    val isLoading: Boolean = false,
+    val error : String = "",
+    val success: List<CategoryModel> = emptyList()
 )

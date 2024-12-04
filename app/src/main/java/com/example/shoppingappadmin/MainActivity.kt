@@ -5,13 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shoppingappadmin.presentation.navigation.App
+import com.example.shoppingappadmin.presentation.view_model.ShoppingAppViewModel
 import com.example.shoppingappadmin.ui.theme.ShoppingAppAdminTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,8 +21,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShoppingAppAdminTheme {
+                val viewModel: ShoppingAppViewModel = hiltViewModel()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   App(modifier = Modifier.padding(innerPadding))
+                   App(viewModel)
                 }
             }
         }

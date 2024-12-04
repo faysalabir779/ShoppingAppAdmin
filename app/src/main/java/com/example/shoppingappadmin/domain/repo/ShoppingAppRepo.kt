@@ -8,4 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface ShoppingAppRepo {
     suspend fun addCategory(categoryModel: CategoryModel): Flow<ResultState<String>>
 //    suspend fun addProduct()
+    suspend fun fetchCategory(): Flow<ResultState<List<CategoryModel>>>
 }

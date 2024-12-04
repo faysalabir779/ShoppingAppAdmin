@@ -22,4 +22,16 @@ class ShoppingAppRepoImpl @Inject constructor(private val firestore: FirebaseFir
             close()
         }
     }
+
+    override suspend fun fetchCategory(): Flow<ResultState<List<CategoryModel>>> = callbackFlow {
+        trySend(ResultState.Loading)
+
+        firestore.collection("CATEGORY").get().addOnSuccessListener {
+            trySend(ResultState.Success(it.toObjects(CategoryModel::class.java)))
+        }.addOnFailureListener {
+            trySend(ResultState.Error(it.message.toString()))
+        }
+        awaitClose {
+        }
+    }
 }

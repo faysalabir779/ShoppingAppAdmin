@@ -2,6 +2,7 @@ package com.example.shoppingappadmin.presentation.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Category
@@ -20,17 +21,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.shoppingappadmin.presentation.screens.AddProductsScreen.AddProductsScreen
 import com.example.shoppingappadmin.presentation.screens.CategoryScreen.CategoryScreen
 import com.example.shoppingappadmin.presentation.screens.DashboardScreen.DashboardScreen
 import com.example.shoppingappadmin.presentation.screens.NotificationScreen.NotificationScreen
 import com.example.shoppingappadmin.presentation.screens.OrdersScreen.OrdersScreen
+import com.example.shoppingappadmin.presentation.view_model.ShoppingAppViewModel
 
 @Composable
-fun App(modifier: Modifier = Modifier) {
+fun App(viewModel: ShoppingAppViewModel) {
 
     val bottomBarItem = listOf(
         BottomBarItem(
@@ -55,7 +57,7 @@ fun App(modifier: Modifier = Modifier) {
         )
     )
 
-    var selectedIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedIndex by rememberSaveable { mutableStateOf(1) }
 
     val navController = rememberNavController()
 
@@ -70,17 +72,21 @@ fun App(modifier: Modifier = Modifier) {
                         onClick = { selectedIndex = index },
                         icon = { Icon(imageVector = bottomBarItem.icon, contentDescription = null) },
                         label = {
-                            Text(text = bottomBarItem.name)
-                        })
+                            Text(text = bottomBarItem.name, textAlign = TextAlign.Center, fontSize = 10.sp)
+                        },
+                        alwaysShowLabel = false
+                    )
                 }
             }
         }){
-            when(selectedIndex){
-                0 -> DashboardScreen()
-                1 -> AddProductsScreen()
-                2 -> NotificationScreen()
-                3 -> CategoryScreen()
-                4 -> OrdersScreen()
+            Box (modifier = Modifier.fillMaxSize().padding(it)){
+                when(selectedIndex){
+                    0 -> DashboardScreen()
+                    1 -> AddProductsScreen(viewModel)
+                    2 -> NotificationScreen()
+                    3 -> CategoryScreen()
+                    4 -> OrdersScreen()
+                }
             }
 
         }
